@@ -18,12 +18,13 @@ public class ProdutoController {
         this.repository = repository;
     }
 
-    @GetMapping("/")
+    @GetMapping("/listar")
     public String listarProdutos(Model model) {
         List<Produto> produtos = repository.findAll();
         model.addAttribute("produtos", produtos);
         return "index";
     }
+
 
 
     // Mostrar o formulário para cadastrar produto
@@ -45,6 +46,23 @@ public class ProdutoController {
         repository.deleteById(id);
         return "redirect:/";
     }
+    @GetMapping("/home")
+    public String home() {
+        return "home";
+    }
+    @GetMapping("/editar/{id}")
+    public String editarProduto(@PathVariable Long id, Model model) {
+        Produto produto = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("ID inválido: " + id));
+        model.addAttribute("produto", produto);
+        return "form";
+    }
+
+    @GetMapping("/")
+    public String redirecionar() {
+        return "redirect:/home";
+    }
+
 
 
 

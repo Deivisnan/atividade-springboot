@@ -23,8 +23,10 @@
         <td th:text="${p.nome}"></td>
         <td th:text="${p.preco}"></td>
         <td>
+            <a th:href="@{'/editar/' + ${p.id}}">Editar</a> |
             <a th:href="@{'/excluir/' + ${p.id}}">Excluir</a>
         </td>
+
     </tr>
 </table>
 

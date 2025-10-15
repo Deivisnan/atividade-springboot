@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Página Inicial</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #74ABE2, #5563DE);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: #fff;
+            padding: 40px 60px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            max-width: 400px;
+        }
+
+        h1 {
+            color: #2C3E50;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #fff;
+            background-color: #5563DE;
+            padding: 12px 25px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            font-weight: 500;
+            margin: 5px;
+        }
+
+        a:hover {
+            background-color: #3e4bc1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(85, 99, 222, 0.3);
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 13px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Bem-vindo ao Sistema de Produtos</h1>
+    <p>Escolha uma das opções abaixo:</p>
+
+    <a href="/listar">📋 Listar Produtos</a>
+    <a href="/novo">➕ Cadastrar Novo Produto</a>
+
+    <footer>© 2025 Sistema de Produtos</footer>
+</div>
+</body>
+</html>
