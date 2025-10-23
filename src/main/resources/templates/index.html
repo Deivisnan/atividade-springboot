@@ -1,34 +1,111 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Lista de Produtos</title>
+    <title>Lista de Alunos</title>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            background: #f4f7fb;
+            margin: 0;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #2a5298;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .table-container {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #2a5298;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f6ff;
+        }
+
+        a.button {
+            background-color: #2a5298;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        a.button:hover {
+            background-color: #1e3c72;
+        }
+
+        .actions a {
+            margin: 0 5px;
+            text-decoration: none;
+            color: #2a5298;
+            font-weight: 600;
+        }
+
+        .actions a:hover {
+            text-decoration: underline;
+        }
+
+        .top-bar {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+    </style>
 </head>
 <body>
-<h1>Produtos</h1>
+<h1>Lista de Alunos</h1>
 
-<!-- Link para criar um novo produto -->
-<a href="/novo">Adicionar Produto</a>
-<br/><br/>
+<div class="top-bar">
+    <a href="/novo" class="button">➕ Adicionar Novo Aluno</a>
+    <a href="/" class="button">🏠 Home</a>
+</div>
 
-<table border="1">
-    <tr>
-        <th>ID</th>
-        <th>Nome</th>
-        <th>Preço</th>
-        <th>Ações</th>
-    </tr>
-    <tr th:each="p : ${produtos}">
-        <td th:text="${p.id}"></td>
-        <td th:text="${p.nome}"></td>
-        <td th:text="${p.preco}"></td>
-        <td>
-            <a th:href="@{'/editar/' + ${p.id}}">Editar</a> |
-            <a th:href="@{'/excluir/' + ${p.id}}">Excluir</a>
-        </td>
-
-    </tr>
-</table>
-
+<div class="table-container">
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Matrícula</th>
+            <th>Idade</th>
+            <th>Ações</th>
+        </tr>
+        <tr th:each="a : ${alunos}">
+            <td th:text="${a.id}"></td>
+            <td th:text="${a.nome}"></td>
+            <td th:text="${a.email}"></td>
+            <td th:text="${a.matricula}"></td>
+            <td th:text="${a.idade}"></td>
+            <td class="actions">
+                <a th:href="@{'/editar/' + ${a.id}}">✏️ Editar</a>
+                <a th:href="@{'/excluir/' + ${a.id}}">🗑️ Excluir</a>
+            </td>
+        </tr>
+    </table>
+</div>
 </body>
 </html>
