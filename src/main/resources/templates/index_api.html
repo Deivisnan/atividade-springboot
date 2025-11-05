@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gerenciamento de Alunos (API)</title>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Estilo moderno -->
+    <style>
+        body {
+            font-family: "Poppins", Arial, sans-serif;
+            background: linear-gradient(135deg, #74ABE2, #5563DE);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            background: #fff;
+            margin: 40px auto;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2C3E50;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background: #5563DE;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        button {
+            background: #5563DE;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #3e4bc1;
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h1>Gerenciamento de Alunos</h1>
+
+    <div class="form-container">
+        <input type="hidden" id="alunoId">
+        <input type="text" id="nome" placeholder="Nome do aluno" required>
+        <input type="email" id="email" placeholder="E-mail" required>
+        <input type="text" id="matricula" placeholder="Matrícula" required>
+        <input type="number" id="idade" placeholder="Idade" required>
+        <button id="btnSalvar">Salvar</button>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>Matrícula</th>
+            <th>Idade</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody id="tabelaAlunos">
+        <!-- Preenchido dinamicamente -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        // 🔹 Função para listar alunos
+        function carregarAlunos() {
+            $.get("/api/alunos", function (data) {
+                $("#tabelaAlunos").empty();
+                data.forEach(aluno => {
+                    $("#tabelaAlunos").append(`
+                        <tr>
+                            <td>${aluno.id}</td>
+                            <td>${aluno.nome}</td>
+                            <td>${aluno.email}</td>
+                            <td>${aluno.matricula}</td>
+                            <td>${aluno.idade}</td>
+                            <td class="actions">
+                                <button onclick="editarAluno(${aluno.id}, '${aluno.nome}', '${aluno.email}', '${aluno.matricula}', ${aluno.idade})">Editar</button>
+                                <button onclick="deletarAluno(${aluno.id})">Excluir</button>
+                            </td>
+                        </tr>
+                    `);
+                });
+            });
+        }
+
+        // 🔹 Salvar ou atualizar aluno
+        $("#btnSalvar").click(function () {
+            const aluno = {
+                nome: $("#nome").val(),
+                email: $("#email").val(),
+                matricula: $("#matricula").val(),
+                idade: $("#idade").val()
+            };
+
+            const id = $("#alunoId").val();
+
+            if (id) {
+                // PUT (atualizar)
+                $.ajax({
+                    url: `/api/alunos/${id}`,
+                    type: "PUT",
+                    contentType: "application/json",
+                    data: JSON.stringify(aluno),
+                    success: function () {
+                        alert("Aluno atualizado com sucesso!");
+                        limparCampos();
+                        carregarAlunos();
+                    }
+                });
+            } else {
+                // POST (criar)
+                $.ajax({
+                    url: "/api/alunos",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(aluno),
+                    success: function () {
+                        alert("Aluno cadastrado com sucesso!");
+                        limparCampos();
+                        carregarAlunos();
+                    }
+                });
+            }
+        });
+
+        // 🔹 Limpar campos
+        function limparCampos() {
+            $("#alunoId").val("");
+            $("#nome").val("");
+            $("#email").val("");
+            $("#matricula").val("");
+            $("#idade").val("");
+        }
+
+        // 🔹 Editar aluno
+        window.editarAluno = function (id, nome, email, matricula, idade) {
+            $("#alunoId").val(id);
+            $("#nome").val(nome);
+            $("#email").val(email);
+            $("#matricula").val(matricula);
+            $("#idade").val(idade);
+        }
+
+        // 🔹 Excluir aluno
+        window.deletarAluno = function (id) {
+            if (confirm("Tem certeza que deseja excluir este aluno?")) {
+                $.ajax({
+                    url: `/api/alunos/${id}`,
+                    type: "DELETE",
+                    success: function () {
+                        alert("Aluno excluído com sucesso!");
+                        carregarAlunos();
+                    }
+                });
+            }
+        }
+
+        // 🔹 Carregar lista ao abrir a página
+        carregarAlunos();
+    });
+</script>
+</body>
+</html>
